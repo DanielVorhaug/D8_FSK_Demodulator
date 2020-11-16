@@ -95,7 +95,7 @@ void ny_hodeverdi(int *hode, int grense) {
 void setup() {
   pinMode(OUTPUT,u_pin);
   pinMode(OUTPUT,b_pin);
-  pinMode(OUTPUT,timer_pin); // Brukes til å måle om arduinoen klarer å bli ferdig med signalprosesseringen før neste interrupt kommer.
+  //pinMode(OUTPUT,timer_pin); // Brukes til å måle om arduinoen klarer å bli ferdig med signalprosesseringen før neste interrupt kommer.
 
   nuller(&samples_inn[0], antall_samples);
   nuller(&filter0[0], N_filter0);
@@ -131,7 +131,7 @@ void loop() {
     // Filter 0
     //
     
-    filter0_verdi = filter0_verdi + sample - samples_inn[filter0_hode];
+    filter0_verdi = filter0_verdi + sample - samples_inn[filter0_hode]; 
     filter0[filter0_nyverdi_hode] = filter0_verdi;
 
     ny_hodeverdi(&filter0_hode, antall_samples);
@@ -169,18 +169,18 @@ void loop() {
     //  State
     //
 
-    filter0_sammenligning = N_filter1 * filter0_middelverdi; // filter1 har en amplituderespons på ca 1/16 ved f_1
-    filter1_sammenligning = /*16**/ N_filter0 * filter1_middelverdi;
+    filter0_sammenligning = N_filter1 * filter0_middelverdi;
+    filter1_sammenligning = 15* N_filter0 * filter1_middelverdi;
 
 
       // Skriver ut verdier én gang i sekundet
-    counter++;
+    /*counter++;
     if (counter > sampling_frekvens) {
       Serial.print(filter0_sammenligning);
       Serial.print(" ");
       Serial.println(filter1_sammenligning);
       counter = 0;    
-    }
+    }*/
 
         // Sammenligner middelverdier og legger til i tellere
     if (filter0_sammenligning > 100000 || filter1_sammenligning > 100000) {
