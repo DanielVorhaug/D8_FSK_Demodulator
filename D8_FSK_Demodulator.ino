@@ -48,7 +48,7 @@ typedef enum {
 
 state_t state = UBESTEMT;
 
-const int counter_limit = 500;  // Antall interupt i strekk at en måling må være lik for å bytte state.
+const int counter_limit = 500;  // Antall interupt i strekk at en måling må være lik for å bytte state. L = 500
 int ubestemt_counter = 0;
 int f0_counter = 0;
 int f1_counter = 0;
@@ -95,7 +95,7 @@ void ny_hodeverdi(int *hode, int grense) {
 void setup() {
   pinMode(OUTPUT,u_pin);
   pinMode(OUTPUT,b_pin);
-  //pinMode(OUTPUT,timer_pin); // Brukes til å måle om arduinoen klarer å bli ferdig med signalprosesseringen før neste interrupt kommer.
+  pinMode(OUTPUT,timer_pin); // Brukes til å måle om arduinoen klarer å bli ferdig med signalprosesseringen før neste interrupt kommer.
 
   nuller(&samples_inn[0], antall_samples);
   nuller(&filter0[0], N_filter0);
@@ -183,7 +183,7 @@ void loop() {
     }*/
 
         // Sammenligner middelverdier og legger til i tellere
-    if (filter0_sammenligning > 100000 || filter1_sammenligning > 100000) {
+    if (filter0_sammenligning > 100000 || filter1_sammenligning > 100000) { // K = 100000
       if (filter0_sammenligning > filter1_sammenligning){
         ubestemt_counter = 0;
         f0_counter++;
@@ -217,14 +217,14 @@ void loop() {
 
     newSample = false;
     
-    //digitalWrite(timer_pin, LOW); // Setter pin lav når signalprosessering er ferdig
+    digitalWrite(timer_pin, LOW); // Setter pin lav når signalprosessering er ferdig
   }
   
 }
 
 // Interrupt-handler (kalles ved hvert interrupt)
 void takeSample(void){
-  // digitalWrite(timer_pin, HIGH); // Setter pin høy når signalet kommer inn
+  digitalWrite(timer_pin, HIGH); // Setter pin høy når signalet kommer inn
   
   sample = analogRead(0) - 512; // Sampler på A0. En verdi tilsvarende 2.5V er trukket fra
   newSample = true;  
